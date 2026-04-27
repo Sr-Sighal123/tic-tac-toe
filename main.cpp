@@ -3,14 +3,12 @@
 #include <ctime>
 using namespace std;
 
-// UC1: Initialize board
 void initializeBoard(char board[3][3]) {
     for(int i=0;i<3;i++)
         for(int j=0;j<3;j++)
             board[i][j] = '-';
 }
 
-// UC1: Print board
 void printBoard(char board[3][3]) {
     for(int i=0;i<3;i++) {
         for(int j=0;j<3;j++) {
@@ -20,7 +18,6 @@ void printBoard(char board[3][3]) {
     }
 }
 
-// UC2: Toss function
 void toss(char &currentPlayer, char &p1Symbol, char &p2Symbol) {
     srand(time(0));
     int result = rand() % 2;
@@ -38,7 +35,6 @@ void toss(char &currentPlayer, char &p1Symbol, char &p2Symbol) {
     }
 }
 
-// UC3: User input
 int getUserInput() {
     int slot;
     cout << "Enter slot (1-9): ";
@@ -46,21 +42,27 @@ int getUserInput() {
     return slot;
 }
 
-// Main function
+void convertToIndex(int slot, int &row, int &col) {
+    row = (slot - 1) / 3;
+    col = (slot - 1) % 3;
+}
+
 int main() {
     char board[3][3];
     char currentPlayer, p1Symbol, p2Symbol;
 
-    // UC1
     initializeBoard(board);
     printBoard(board);
 
-    // UC2
     toss(currentPlayer, p1Symbol, p2Symbol);
 
-    // UC3
+
     int slot = getUserInput();
-    cout << "You entered: " << slot << endl;
+
+    int row, col;
+    convertToIndex(slot, row, col);
+
+    cout << "Row: " << row << ", Column: " << col << endl;
 
     return 0;
 }
