@@ -72,6 +72,36 @@ int getRandomSlot() {
     return rand() % 9 + 1;
 }
 
+// UC8 helpers
+
+bool checkWin(char board[3][3], char symbol) {
+    // Rows & Columns
+    for(int i=0;i<3;i++) {
+        if(board[i][0]==symbol && board[i][1]==symbol && board[i][2]==symbol)
+            return true;
+        if(board[0][i]==symbol && board[1][i]==symbol && board[2][i]==symbol)
+            return true;
+    }
+
+    // Diagonals
+    if(board[0][0]==symbol && board[1][1]==symbol && board[2][2]==symbol)
+        return true;
+
+    if(board[0][2]==symbol && board[1][1]==symbol && board[2][0]==symbol)
+        return true;
+
+    return false;
+}
+
+bool checkDraw(char board[3][3]) {
+    for(int i=0;i<3;i++)
+        for(int j=0;j<3;j++)
+            if(board[i][j] == '-')
+                return false;
+
+    return true;
+}
+
 // Main
 int main() {
     char board[3][3];
@@ -82,41 +112,70 @@ int main() {
 
     toss(currentPlayer, p1Symbol, p2Symbol);
 
-    int row, col, slot;
+    bool gameOver = false;
 
-    // -------- PLAYER TURN --------
-    if(currentPlayer == '1') {
+    while(!gameOver) {
 
-        slot = getUserInput();
-        convertToIndex(slot, row, col);
+        int slot, row, col;
 
-        if(isValidMove(board, row, col)) {
-            placeMove(board, row, col, p1Symbol);
-        } else {
-            cout << "Invalid Move!" << endl;
-            return 0;
+        // -------- PLAYER TURN --------
+        if(currentPlayer == '1') {
+
+            slot = getUserInput();
+            convertToIndex(slot, row, col);
+
+            if(isValidMove(board, row, col)) {
+                placeMove(board, row, col, p1Symbol);
+            } else {
+                cout << "Invalid Move! Try again.\n";
+                continue;
+            }
+
+            cout << "\nBoard after player move:\n";
+            printBoard(board);
+
+            // Check win
+            if(checkWin(board, p1Symbol)) {
+                cout << "\nPlayer Wins!\n";
+                gameOver = true;
+            }
+            else if(checkDraw(board)) {
+                cout << "\nGame Draw!\n";
+                gameOver = true;
+            }
+            else {
+                currentPlayer = '2'; // switch
+            }
         }
 
-        cout << "\nBoard after player move:\n";
-        printBoard(board);
+        // -------- COMPUTER TURN --------
+        else {
 
-        currentPlayer = '2'; // switch to computer
-    }
+            do {
+                slot = getRandomSlot();
+                convertToIndex(slot, row, col);
+            } while(!isValidMove(board, row, col));
 
-    // -------- COMPUTER TURN --------
-    if(currentPlayer == '2') {
+            cout << "\nComputer chose slot: " << slot << endl;
 
-        do {
-            slot = getRandomSlot();
-            convertToIndex(slot, row, col);
-        } while(!isValidMove(board, row, col));
+            placeMove(board, row, col, p2Symbol);
 
-        cout << "\nComputer chose slot: " << slot << endl;
+            cout << "\nBoard after computer move:\n";
+            printBoard(board);
 
-        placeMove(board, row, col, p2Symbol);
-
-        cout << "\nBoard after computer move:\n";
-        printBoard(board);
+            // Check win
+            if(checkWin(board, p2Symbol)) {
+                cout << "\nComputer Wins!\n";
+                gameOver = true;
+            }
+            else if(checkDraw(board)) {
+                cout << "\nGame Draw!\n";
+                gameOver = true;
+            }
+            else {
+                currentPlayer = '1'; // switch
+            }
+        }
     }
 
     return 0;
