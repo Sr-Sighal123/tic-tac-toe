@@ -2,6 +2,7 @@
 #include <cstdlib>
 #include <ctime>
 using namespace std;
+
 void initializeBoard(char board[3][3]) {
     for(int i=0;i<3;i++)
         for(int j=0;j<3;j++)
@@ -56,6 +57,10 @@ bool isValidMove(char board[3][3], int row, int col) {
     return true;
 }
 
+void placeMove(char board[3][3], int row, int col, char symbol) {
+    board[row][col] = symbol;
+}
+
 int main() {
     char board[3][3];
     char currentPlayer, p1Symbol, p2Symbol;
@@ -71,7 +76,18 @@ int main() {
     convertToIndex(slot, row, col);
 
     if(isValidMove(board, row, col)) {
-        cout << "Valid Move!" << endl;
+
+        char symbol;
+        if(currentPlayer == '1')
+            symbol = p1Symbol;
+        else
+            symbol = p2Symbol;
+
+        placeMove(board, row, col, symbol);
+
+        cout << "\nBoard after move:\n";
+        printBoard(board);
+
     } else {
         cout << "Invalid Move!" << endl;
     }
