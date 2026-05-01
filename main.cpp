@@ -93,6 +93,7 @@ bool checkWin(char board[3][3], char symbol) {
     return false;
 }
 
+// UC10: Detect draw condition (no empty cells left)
 bool checkDraw(char board[3][3]) {
     for(int i=0;i<3;i++)
         for(int j=0;j<3;j++)
