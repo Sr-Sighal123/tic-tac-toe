@@ -73,7 +73,7 @@ int getRandomSlot() {
 }
 
 // UC8 helpers
-
+// UC9: Check winning condition (rows, columns, diagonals)
 bool checkWin(char board[3][3], char symbol) {
     // Rows & Columns
     for(int i=0;i<3;i++) {
